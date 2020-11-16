@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Data Buku | <a href="/tambah-buku" style="font-size:16px">Tambah Buku</a> | <a href="/export/xls" style="font-size:16px">Export XLS</a> </h3>
+            {% for message in messages %}
+                {%if message%}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">{{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                {%endif%}
+            {%endfor%}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>COVER</th>
+                        <th>JUDUL</th>
+                        <th>PENULIS</th>
+                        <th>PENERBIT</th>
+                        <th>JUMLAH</th>
+                        <th>KELOMPOK</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for buku in books %}
+                        <tr>
+                            <td>
+                                {%if buku.cover%}
+                                    <img src="{{buku.cover.url}}" alt="{{buku.judul}}" width="60px">
+                                {%endif%}
+                            </td>
+                            <td><a href="{%url 'ubah-buku' buku.id%}">{{buku.judul}}</a></td>
+                            <td>{{buku.penulis}}</td>
+                            <td>
+                                {% if buku.penerbit%}
+                                    {{buku.penerbit}}
+                                {%else%}
+                                    Penerbit Tidak Diketahui
+                                {%endif%}
+                            </td>
+                            <td>{{buku.jumlah}}</td>
+                            <td>{{buku.kelompok}}</td>
+                            <td><button data-toggle="modal" onclick="modalHapus({{buku.id}},'{{buku.judul}}')" class="btn btn-danger">Hapus</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Modal Hapus-->
+<div class="modal fade" id="modalHapus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Hapus <label id="bukuHapus"></label>?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <input type="hidden" id="idHapus" name="idHapus">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="#" id="linkHapus" class="btn btn-danger">Hapus</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function modalHapus(id,nama){
+        $('#modalHapus').modal('show')
+        $('#idHapus').val(id)
+        $('#bukuHapus').html(nama)
+        $('#linkHapus').attr('href','/buku/hapus/'+id)
+    }
+</script>
+{% endblock %}

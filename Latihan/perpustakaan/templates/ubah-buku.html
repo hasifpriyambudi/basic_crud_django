@@ -1,0 +1,21 @@
+{%extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>UBAH {{ buku.judul }}</h3>
+                {% for message in messages %}
+                    {%if message%}
+                        <div class="alert alert-success">{{message}}</div>
+                    {% endif %}
+                {% endfor %}
+                <form action="{% url 'ubah-buku' buku.id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-success">Update</button>
+                    <a href="/buku" class="btn btn-danger">Kembali</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
